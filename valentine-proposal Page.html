@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Valentine's Day 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Floating hearts animation */
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float 6s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-50px) rotate(10deg);
+            }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #e63946;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            position: relative;
+            height: 80px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            position: absolute;
+            transition: all 0.2s ease;
+        }
+
+        .success-message {
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-emoji {
+            font-size: 120px;
+            margin-bottom: 20px;
+        }
+
+        .success-text {
+            font-size: 2em;
+            color: #e63946;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .love-message {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Confetti animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f5576c;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="heart" style="left: 10%; animation-delay: 0s;">💖</div>
+    <div class="heart" style="left: 20%; animation-delay: 1s;">💕</div>
+    <div class="heart" style="left: 70%; animation-delay: 2s;">💗</div>
+    <div class="heart" style="left: 85%; animation-delay: 0.5s;">💝</div>
+    <div class="heart" style="left: 40%; animation-delay: 1.5s;">💖</div>
+
+    <div class="container">
+        <div class="question-section" id="questionSection">
+            <div class="emoji">😍</div>
+            <h1>Valentine's Day Special!</h1>
+            <p class="question">क्या तुम मेरी Valentine बनोगी? 💕</p>
+            
+            <div class="buttons">
+                <button id="yesBtn" onclick="handleYes()">हाँ! 💖 Yes</button>
+                <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">नहीं 😢 No</button>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="success-emoji">🎉💑🎊</div>
+            <p class="success-text">यायyyy! 🥰</p>
+            <p class="love-message">
+                मुझे पता था तुम हाँ कहोगी! 💕<br>
+                Happy Valentine's Day! ❤️<br>
+                तुम मेरी Valentine हो! 😘
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        let noBtnClickCount = 0;
+
+        function moveButton() {
+            const container = document.querySelector('.buttons');
+            const containerRect = container.getBoundingClientRect();
+            
+            // Random position within the buttons container
+            const maxX = 200;
+            const maxY = 50;
+            
+            const randomX = Math.random() * maxX - maxX/2;
+            const randomY = Math.random() * maxY - maxY/2;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            noBtnClickCount++;
+            
+            // Make Yes button bigger each time No is avoided
+            const newScale = 1 + (noBtnClickCount * 0.1);
+            yesBtn.style.transform = `scale(${newScale})`;
+        }
+
+        function handleYes() {
+            document.getElementById('questionSection').style.display = 'none';
+            document.getElementById('successMessage').classList.add('show');
+            
+            // Create confetti
+            createConfetti();
+            
+            // Play celebration
+            celebrate();
+        }
+
+        function createConfetti() {
+            const colors = ['#f5576c', '#f093fb', '#a8edea', '#fed6e3', '#ffd700'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 30);
+            }
+        }
+
+        function celebrate() {
+            // Add more floating hearts
+            const emojis = ['❤️', '💕', '💖', '💗', '💝', '💘', '💞'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 6000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
